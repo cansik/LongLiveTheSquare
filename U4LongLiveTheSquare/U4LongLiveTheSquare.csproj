@@ -36,6 +36,8 @@
     <Compile Include="Geometry\Line2d.cs" />
     <Compile Include="Geometry\Segment2d.cs" />
     <Compile Include="Geometry\Vector2d.cs" />
+    <Compile Include="Draw\IGeometry.cs" />
+    <Compile Include="Draw\GridView.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -48,5 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Geometry\" />
+    <Folder Include="Draw\" />
   </ItemGroup>
 </Project>

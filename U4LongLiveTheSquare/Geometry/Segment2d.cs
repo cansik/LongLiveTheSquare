@@ -1,8 +1,10 @@
 ﻿using System;
+using U4LongLiveTheSquare;
+using Eto.Drawing;
 
 namespace Efalg5GeometrischeAlgo
 {
-	public class Segment2d : Line2d
+	public class Segment2d : Line2d, IGeometry
 	{
 		/// <summary>
 		/// Second Point of Line.
@@ -25,6 +27,19 @@ namespace Efalg5GeometrischeAlgo
 		{
 			return string.Format ("[Segment2d: A={0} B={1}]", A, B);
 		}
+
+		#region IGeometry implementation
+
+		public GraphicsPath GraphicsPath {
+			get {
+				var gp = new GraphicsPath ();
+				gp.AddLine ((float)A.X, (float)A.Y, (float)B.X, (float)B.Y);
+
+				return gp;
+			}
+		}
+
+		#endregion
 	}
 }
 

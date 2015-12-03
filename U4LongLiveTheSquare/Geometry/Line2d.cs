@@ -1,8 +1,10 @@
 ﻿using System;
+using U4LongLiveTheSquare;
+using Eto.Drawing;
 
 namespace Efalg5GeometrischeAlgo
 {
-	public class Line2d
+	public class Line2d : IGeometry
 	{
 		/// <summary>
 		/// Position Vector of line.
@@ -22,6 +24,22 @@ namespace Efalg5GeometrischeAlgo
 			A = position;
 			R = direction;
 		}
+
+		#region IGeometry implementation
+
+		public GraphicsPath GraphicsPath {
+			get {
+				var gp = new GraphicsPath ();
+
+				var b = A + R;
+				var lc = 10000f;
+				gp.AddLine ((float)A.X - lc, (float)A.Y - lc, (float)b.X + lc, (float)b.Y + lc);
+
+				return gp;
+			}
+		}
+
+		#endregion
 	}
 }
 

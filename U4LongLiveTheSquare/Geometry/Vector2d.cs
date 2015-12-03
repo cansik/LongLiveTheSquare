@@ -1,8 +1,10 @@
 ﻿using System;
+using U4LongLiveTheSquare;
+using Eto.Drawing;
 
 namespace Efalg5GeometrischeAlgo
 {
-	public class Vector2d : IComparable
+	public class Vector2d : IComparable, IGeometry
 	{
 		#if DEBUG
 		private static int VECTOR_NR = 0;
@@ -269,6 +271,19 @@ namespace Efalg5GeometrischeAlgo
 		}
 
 		#endregion
+
+		#region IGeometry implementation
+
+		public GraphicsPath GraphicsPath {
+			get {
+				var size = 1f;
+				var gp = new GraphicsPath ();
+				gp.AddEllipse ((float)X - size, (float)Y - size, size, size);
+				return gp;
+			}
+
+		#endregion
+		}
 	}
 }
 
