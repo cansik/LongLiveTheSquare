@@ -7,8 +7,6 @@ namespace U4LongLiveTheSquare
 {
 	public static class MinimalBoundingBox
 	{
-		static Line2d xAxis = new Line2d (new Vector2d (0, 0), new Vector2d (1, 0));
-
 		public static Polygon2d Calculate (Vector2d[] points)
 		{
 			//calculate the convex hull
@@ -75,10 +73,8 @@ namespace U4LongLiveTheSquare
 
 		static Vector2d RotateToXAxis (Vector2d v, double angle)
 		{
-			//newX = centerX + (point2x-centerX)*Math.cos(x) - (point2y-centerY)*Math.sin(x);
-			//newY = centerY + (point2x-centerX)*Math.sin(x) + (point2y-centerY)*Math.cos(x);
-			double newX = v.X * Math.Cos (angle) - v.Y * Math.Sin (angle);
-			double newY = v.X * Math.Sin (angle) + v.Y * Math.Cos (angle);
+			var newX = v.X * Math.Cos (angle) - v.Y * Math.Sin (angle);
+			var newY = v.X * Math.Sin (angle) + v.Y * Math.Cos (angle);
 
 			return new Vector2d (newX, newY);
 		}
