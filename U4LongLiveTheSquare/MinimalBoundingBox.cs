@@ -14,6 +14,10 @@ namespace U4LongLiveTheSquare
 			//calculate the convex hull
 			var hullPoints = GeoAlgos.MonotoneChainConvexHull (points);
 
+			//check if no bounding box available
+			if (hullPoints.Length <= 1)
+				return new Polygon2d{ Points = hullPoints.ToList () };
+
 			Rectangle2d minBox = null;
 			var minAngle = 0d;
 
@@ -27,10 +31,10 @@ namespace U4LongLiveTheSquare
 				var segment = new Segment2d (current, next);
 
 				//min / max points
-				var top = 0d;
-				var bottom = 0d;
-				var left = 0d;
-				var right = 0d;
+				var top = double.MinValue;
+				var bottom = double.MaxValue;
+				var left = double.MaxValue;
+				var right = double.MinValue;
 
 				//get angle of segment to x axis
 				var angle = AngleToXAxis (segment);
@@ -42,12 +46,12 @@ namespace U4LongLiveTheSquare
 					top = Math.Max (top, rotatedPoint.Y);
 					bottom = Math.Min (bottom, rotatedPoint.Y);
 
-					left = Math.Max (left, rotatedPoint.X);
-					right = Math.Min (right, rotatedPoint.X);
+					left = Math.Min (left, rotatedPoint.X);
+					right = Math.Max (right, rotatedPoint.X);
 				}
 
 				//create axis aligned bounding box
-				var box = new Rectangle2d (new Vector2d (right, bottom), new Vector2d (left, top));
+				var box = new Rectangle2d (new Vector2d (left, bottom), new Vector2d (right, top));
 
 				if (minBox == null || minBox.Area () > box.Area ()) {
 					minBox = box;
