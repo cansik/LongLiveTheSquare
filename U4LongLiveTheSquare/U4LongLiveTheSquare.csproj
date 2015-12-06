@@ -38,6 +38,9 @@
     <Compile Include="Geometry\Vector2d.cs" />
     <Compile Include="Draw\IGeometry.cs" />
     <Compile Include="Draw\GridView.cs" />
+    <Compile Include="MinimalBoundingBox.cs" />
+    <Compile Include="Geometry\Polygon2d.cs" />
+    <Compile Include="Geometry\Rectangle2d.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -51,5 +54,12 @@
   <ItemGroup>
     <Folder Include="Geometry\" />
     <Folder Include="Draw\" />
+    <Folder Include="Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\convex_hull.fw.png" />
+    <EmbeddedResource Include="Images\reset.fw.png" />
+    <EmbeddedResource Include="Images\random.fw.png" />
+    <EmbeddedResource Include="Images\bounding_box.fw.png" />
   </ItemGroup>
 </Project>

@@ -13,24 +13,25 @@ namespace U4LongLiveTheSquare
 	{
 		public List<IGeometry> Geometries { get; private set; }
 
-		public Color ClearColor { get; set; } = Color.FromRgb (0x000000);
+		public Color ClearColor { get; set; } = Colors.Black;
 
-		public Color ForeGroundColor { get; set; } = Color.FromRgb(0xFFFFFF);
+		public Color ForeGroundColor { get; set; } = Colors.Gray;
 
-		public float ScaleFactor { get; set; } = 1;
+		public Color ForeGroundFillColor { get; set; } = Colors.White;
+
+		public Color GridColor { get; set; } = Colors.White;
+
+		public float ScaleFactor { get; set; } = 8;
 
 		public PointF TransformationDelta { get; set; } = new PointF(0, 0);
 
 		public IMatrix ProjectionMatrix {
 			get {
 				//scaling / transformation / rotation
-				var centerX = Width / 2f + TransformationDelta.X;
-				var centerY = Height / 2f + TransformationDelta.Y; 
-
 				var m = Matrix.Create ();
 
 				//translate xy
-				m.Translate (centerX, centerY);
+				m.Translate (Center.X, Center.Y);
 
 				//scale
 				m.Scale (ScaleFactor);
@@ -39,6 +40,14 @@ namespace U4LongLiveTheSquare
 				m.Yy *= -1;
 
 				return m;
+			}
+		}
+
+		public PointF Center {
+			get {
+				var centerX = Width / 2f + TransformationDelta.X;
+				var centerY = Height / 2f + TransformationDelta.Y; 
+				return new PointF (centerX, centerY);
 			}
 		}
 
@@ -55,20 +64,33 @@ namespace U4LongLiveTheSquare
 		{
 			var g = e.Graphics;
 
+			//utils
+			var brush = new SolidBrush (ForeGroundFillColor);
+			var pen = new Pen (ForeGroundColor, 1);
+			var gridPen = new Pen (GridColor, 1);
+			var m = ProjectionMatrix;
+
+			//background gradient
+			var bg = new RadialGradientBrush (
+				         Colors.WhiteSmoke, 
+				         Colors.LightBlue, 
+				         Center, 
+				         Center, 
+				         new SizeF (Width * 0.8f, Width * 0.8f));
+
 			//clear image
 			g.Clear (ClearColor);
-
+			g.FillRectangle (bg, 0, 0, Width, Height);
+				
 			//generate paths
 			var path = new GraphicsPath ();
 			foreach (var geometry in Geometries)
 				path.AddPath (geometry.GraphicsPath);
 
+			//draw coordinate system
+			g.DrawPath (gridPen, GetCoordinateSystem ());
+
 			//draw paths
-			var brush = new SolidBrush (ForeGroundColor);
-			var pen = new Pen (ForeGroundColor, 2);
-
-			var m = ProjectionMatrix;
-
 			if (!path.IsEmpty) {
 				path.Transform (m);
 
@@ -76,23 +98,21 @@ namespace U4LongLiveTheSquare
 				g.FillPath (brush, path);
 				g.DrawPath (pen, path);
 			}
-
-			//test
-			var rect1 = new GraphicsPath ();
-			rect1.AddRectangle (-50, -50, 100, 100);
-			rect1.Transform (m);
-			pen.Color = Color.FromRgb (0x00FF00);
-			g.DrawPath (pen, rect1);
-
-			var rect2 = new GraphicsPath ();
-			rect2.AddRectangle (-5, -5, 10, 10);
-			rect2.Transform (m);
-			pen.Color = Color.FromRgb (0xFF0000);
-			g.FillPath (pen.Color, rect2);
-			g.DrawPath (pen, rect2);
-
+				
 			brush.Dispose ();
 			pen.Dispose ();
+		}
+
+		GraphicsPath GetCoordinateSystem ()
+		{
+			var gp = new GraphicsPath ();
+
+			//add axis
+			gp.AddLine (-Width, 0, Width, 0);
+			gp.AddLine (0, -Height, 0, +Height);
+
+			gp.Transform (ProjectionMatrix);
+			return gp;
 		}
 
 		public void Update ()

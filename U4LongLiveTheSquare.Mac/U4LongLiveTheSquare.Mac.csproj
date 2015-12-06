@@ -9,6 +9,7 @@
     <RootNamespace>U4LongLiveTheSquare.Mac</RootNamespace>
     <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
     <AssemblyName>U4LongLiveTheSquare.Mac</AssemblyName>
+    <SuppressXamMacMigration>True</SuppressXamMacMigration>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

@@ -149,69 +149,10 @@ namespace Efalg5GeometrischeAlgo
 			return new Vector2d (this);
 		}
 
-		#region Convex Hull
-
-		public void MakeRelTo (Vector2d p)
+		public Vector2d Pow (double power = 2)
 		{
-			X -= p.X;
-			Y -= p.Y;
+			return new Vector2d (Math.Pow (X, power), Math.Pow (Y, power));
 		}
-
-		public bool IsConvex (Vector2d p0, Vector2d p1)
-		{
-			double f = Area2 (p0, p1);
-			return f < 0 || f == 0 && !IsBetween (p0, p1);
-		}
-
-		public bool IsLess (Vector2d p)
-		{
-			double f = Cross (p);
-			return f > 0 || f == 0 && IsFurther (p);
-		}
-
-		public double Area2 (Vector2d p0, Vector2d p1)
-		{
-			return p0.relTo (this).Cross (p1.relTo (this));
-		}
-
-
-		public Vector2d Reversed ()
-		{
-			return new Vector2d (-X, -Y);
-		}
-
-		public bool IsLower (Vector2d p)
-		{
-			return Y < p.Y || Y == p.Y && X < p.X;
-		}
-
-		public double Mdist ()
-		{   // Manhattan-distance
-			return Math.Abs (X) + Math.Abs (Y);
-		}
-
-		public double Mdist (Vector2d p)
-		{
-			return relTo (p).Mdist ();
-		}
-
-		public Vector2d relTo (Vector2d p)
-		{
-			return new Vector2d (X - p.X, Y - p.Y);
-		}
-
-		public bool IsFurther (Vector2d p)
-		{
-			return Mdist () > p.Mdist ();
-		}
-
-		public bool IsBetween (Vector2d p0, Vector2d p1)
-		{
-			return p0.Mdist (p1) >= Mdist (p0) + Mdist (p1);
-		}
-
-
-		#endregion
 
 		// operation overloading
 		public static Vector2d operator + (Vector2d v1, Vector2d v2)
@@ -278,7 +219,7 @@ namespace Efalg5GeometrischeAlgo
 			get {
 				var size = 1f;
 				var gp = new GraphicsPath ();
-				gp.AddEllipse ((float)X - size, (float)Y - size, size, size);
+				gp.AddEllipse ((float)X - size / 2, (float)Y - size / 2, size, size);
 				return gp;
 			}
 
