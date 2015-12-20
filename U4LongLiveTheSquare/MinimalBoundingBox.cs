@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
 using Efalg5GeometrischeAlgo;
-using System.Threading.Tasks;
 
 namespace U4LongLiveTheSquare
 {
 	public static class MinimalBoundingBox
 	{
+		/// <summary>
+		/// Calculates the minimum bounding box.
+		/// </summary>
+		/// <param name="points">Bounding Box.</param>
 		public static Polygon2d Calculate (Vector2d[] points)
 		{
 			//calculate the convex hull
@@ -65,12 +68,23 @@ namespace U4LongLiveTheSquare
 			return minimalBoundingBox;
 		}
 
+		/// <summary>
+		/// Calculates the angle to the X axis.
+		/// </summary>
+		/// <returns>The angle to the X axis.</returns>
+		/// <param name="s">The segnment to get the angle from.</param>
 		static double AngleToXAxis (Segment2d s)
 		{
 			var delta = s.A - s.B;
 			return Math.Atan (delta.Y / delta.X);
 		}
 
+		/// <summary>
+		/// Rotates vector by an angle to the x-Axis
+		/// </summary>
+		/// <returns>Rotated vector.</returns>
+		/// <param name="v">Vector to rotate.</param>
+		/// <param name="angle">Angle to trun by.</param>
 		static Vector2d RotateToXAxis (Vector2d v, double angle)
 		{
 			var newX = v.X * Math.Cos (angle) - v.Y * Math.Sin (angle);

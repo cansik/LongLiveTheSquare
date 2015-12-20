@@ -41,6 +41,7 @@
     <Compile Include="MinimalBoundingBox.cs" />
     <Compile Include="Geometry\Polygon2d.cs" />
     <Compile Include="Geometry\Rectangle2d.cs" />
+    <Compile Include="StopWatch.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>

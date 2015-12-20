@@ -38,7 +38,7 @@ namespace U4LongLiveTheSquare
 
 		#region IGeometry implementation
 
-		public Eto.Drawing.GraphicsPath GraphicsPath {
+		public GraphicsPath GraphicsPath {
 			get {
 				var gp = new GraphicsPath ();
 				gp.AddRectangle ((float)Location.X, (float)Location.Y, (float)(Size.X), (float)(Size.Y));

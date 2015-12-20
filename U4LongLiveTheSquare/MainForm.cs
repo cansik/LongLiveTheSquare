@@ -4,7 +4,8 @@ using Eto.Forms;
 using Eto.Drawing;
 using System.Diagnostics;
 using Efalg5GeometrischeAlgo;
-using System.Diagnostics.Contracts;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace U4LongLiveTheSquare
 {
@@ -17,11 +18,18 @@ namespace U4LongLiveTheSquare
 
 		bool drag = false;
 
+		Label statusLabel;
+
+		StopWatch watch;
+
 		public MainForm ()
 		{
 			Title = "Long live the square!";
 			ClientSize = new Size (500, 500);
 
+			watch = new StopWatch ();
+
+			//create drawing canvas
 			canvas = new GridView ();
 			canvas.LoadComplete += (sender, e) => canvas.Update ();
 			canvas.MouseDown += Canvas_MouseDown;
@@ -29,8 +37,7 @@ namespace U4LongLiveTheSquare
 			canvas.MouseMove += Canvas_MouseMove;
 			canvas.MouseWheel += Canvas_MouseWheel;
 
-			Content = canvas;
-
+			// create toolbar buttons
 			var calcConvexHull = new Command {
 				MenuText = "Convex Hull",
 				ToolBarText = "Convex Hull",
@@ -83,37 +90,92 @@ namespace U4LongLiveTheSquare
 				AboutItem = aboutCommand
 			};
 
+			statusLabel = new Label {
+				VerticalAlignment = VerticalAlignment.Center,
+				Text = "Label"
+			};
+
+			//status panel for information output
+			var statusPanel = new Panel {
+				MinimumSize = new Size (100, 25),
+				Content = statusLabel
+			};
+					
 			// create toolbar			
 			ToolBar = new ToolBar { Items = { resetGrid, randomPoints, calcConvexHull, calcBoundingBox } };
+
+			//layout ui
+			Content = new StackLayout {
+				HorizontalContentAlignment = HorizontalAlignment.Stretch,
+				VerticalContentAlignment = VerticalAlignment.Stretch,
+				Items = { 
+					new StackLayoutItem (canvas, true),
+					new StackLayoutItem (statusPanel)
+				}
+			};
+
+			UpdateUi ();
+		}
+
+		void CalcConvexHull_Executed (object sender, EventArgs e)
+		{
+			UpdateStatusLabel ("calculating convex hull...");
+
+			//clear old lines
+			var oldHull = canvas.Geometries.OfType<Segment2d> ().ToArray ();
+			foreach (var l in oldHull)
+				canvas.Geometries.Remove (l);
+
+			//get all points
+			var points = canvas.Geometries.OfType<Vector2d> ().ToArray ();
+
+			watch.Start ();
+			var convexHull = GeoAlgos.MonotoneChainConvexHull (points);
+			watch.Stop ();
+
+			//draw convex hull
+			for (var i = 0; i < convexHull.Length; i++) {
+				var next = (i + 1) % convexHull.Length;
+				canvas.Geometries.Add (new Segment2d (convexHull [i], convexHull [next]));
+			}
+
+			UpdateUi (watch.Duration.TotalSeconds + " ms");
 		}
 
 		void CalcBoundingBox_Executed (object sender, EventArgs e)
 		{
+			UpdateStatusLabel ("calculating bounding box...");
+	
 			//clear old lines
 			var oldBoxes = canvas.Geometries.OfType<Polygon2d> ().ToArray ();
 			foreach (var b in oldBoxes)
 				canvas.Geometries.Remove (b);
-			
+
+			watch.Start ();
+
 			//calculate new box
 			var box = MinimalBoundingBox.Calculate (canvas.Geometries.OfType<Vector2d> ().ToArray ());
+
+			watch.Stop ();
+
 			canvas.Geometries.Add (box);
-			canvas.Update ();
+			UpdateUi (watch.Duration.TotalSeconds + " ms");
 		}
 
 		void RandomPoints_Executed (object sender, EventArgs e)
 		{
 			var r = new Random ();
-			for (var i = 0; i < 20; i++) {
+			for (var i = 0; i < 500; i++) {
 				AddPoint (r.Next (0, canvas.Width - 20), r.Next (0, canvas.Height - 20));
 			}
-			canvas.Update ();
+			UpdateUi ();
 		}
 
 		void ResetGrid_Executed (object sender, EventArgs e)
 		{
 			canvas.Geometries.Clear ();
 			canvas.ScaleFactor = 8;
-			canvas.Update ();
+			UpdateUi ();
 		}
 
 		void Canvas_MouseWheel (object sender, MouseEventArgs e)
@@ -122,7 +184,7 @@ namespace U4LongLiveTheSquare
 			var direction = 0 > e.Delta.Height ? -1 : 1;
 			canvas.ScaleFactor += Math.Min (0.1f, Math.Abs (e.Delta.Height)) * direction;
 			canvas.ScaleFactor = Math.Max (0, canvas.ScaleFactor);
-			canvas.Update ();
+			UpdateUi ();
 		}
 
 		void Canvas_MouseDown (object sender, MouseEventArgs e)
@@ -147,30 +209,10 @@ namespace U4LongLiveTheSquare
 		{
 			if (!drag) {
 				AddPoint (e.Location.X, e.Location.Y);
-				canvas.Update ();
+				UpdateUi ();
 			}
 
 			drag = false;
-		}
-
-		void CalcConvexHull_Executed (object sender, EventArgs e)
-		{
-			//clear old lines
-			var oldHull = canvas.Geometries.OfType<Segment2d> ().ToArray ();
-			foreach (var l in oldHull)
-				canvas.Geometries.Remove (l);
-
-			//get all points
-			var points = canvas.Geometries.OfType<Vector2d> ().ToArray ();
-			var convexHull = GeoAlgos.MonotoneChainConvexHull (points);
-
-			//draw convex hull
-			for (var i = 0; i < convexHull.Length; i++) {
-				var next = (i + 1) % convexHull.Length;
-				canvas.Geometries.Add (new Segment2d (convexHull [i], convexHull [next]));
-			}
-
-			canvas.Update ();
 		}
 
 		void AddPoint (float x, float y)
@@ -179,6 +221,30 @@ namespace U4LongLiveTheSquare
 			var translatedPoint = new PointF ((x - m.X0) / m.Xx, (y - m.Y0) / m.Yy);
 
 			canvas.Geometries.Add (new Vector2d (translatedPoint.X, translatedPoint.Y));
+		}
+
+		void UpdateUi (String message = "")
+		{
+			canvas.Update ();
+			UpdateStatusLabel (message);
+		}
+
+		void UpdateStatusLabel (String message = "")
+		{
+			Task.Run (() => {
+				var points = canvas.Geometries.OfType<Vector2d> ().Count ();
+				var b = new StringBuilder ();
+
+				if (message != "") {
+					b.Append ("Status: ");
+					b.Append (message);
+					b.Append ("\t");	
+				}
+				b.Append ("Points: ");
+				b.Append (points);
+
+				statusLabel.Text = b.ToString ();
+			});
 		}
 	}
 }
