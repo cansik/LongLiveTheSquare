@@ -77,7 +77,8 @@ The UI (*Figure 3*) does contain following functions:
 * To calculate and show the minimum bounding box click the **Bounding Box** button.
 
 ### About
-*Developed by Florian Bruggisser 2015*
+* *Copyright (c) 2016 Florian Bruggisser*
+* *[MIT License](LICENSE)*
 
 [1]: https://en.wikipedia.org/wiki/Minimum_bounding_box "Minimum Bounding Box"
 [2]: https://en.wikipedia.org/wiki/Convex_hull "Convex Hull"
