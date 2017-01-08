@@ -6,6 +6,7 @@ using System.Diagnostics;
 using Efalg5GeometrischeAlgo;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace U4LongLiveTheSquare
 {
@@ -165,8 +166,8 @@ namespace U4LongLiveTheSquare
 		void RandomPoints_Executed (object sender, EventArgs e)
 		{
 			var r = new Random ();
-			for (var i = 0; i < 500; i++) {
-				AddPoint (r.Next (0, canvas.Width - 20), r.Next (0, canvas.Height - 20));
+			for (var i = 0; i < 50; i++) {
+				AddPoint (r.Next (0, canvas.Width - 50), r.Next (0, canvas.Height - 50));
 			}
 			UpdateUi ();
 		}
@@ -213,6 +214,14 @@ namespace U4LongLiveTheSquare
 			}
 
 			drag = false;
+		}
+
+		void AddPoint(Vector2d v)
+		{
+			var m = canvas.ProjectionMatrix;
+			var translatedPoint = new PointF(((float)v.X - m.X0) / m.Xx, ((float)v.Y - m.Y0) / m.Yy);
+
+			canvas.Geometries.Add(new Vector2d(translatedPoint.X, translatedPoint.Y));
 		}
 
 		void AddPoint (float x, float y)

@@ -31,7 +31,7 @@ Because it is more trivial to find the axis aligned bounding box then the arbitr
 ```cs
 // get angle of segment s
 var delta = s.A - s.B;
-var angle = Math.Atan (delta.Y / delta.X);
+var angle = -Math.Atan (delta.Y / delta.X);
 
 // rotate vector v
 var newX = v.X * Math.Cos (angle) - v.Y * Math.Sin (angle);

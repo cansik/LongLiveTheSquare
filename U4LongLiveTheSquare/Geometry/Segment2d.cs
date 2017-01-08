@@ -1,6 +1,7 @@
 ﻿using System;
 using U4LongLiveTheSquare;
 using Eto.Drawing;
+using System.Diagnostics;
 
 namespace Efalg5GeometrischeAlgo
 {
@@ -30,11 +31,10 @@ namespace Efalg5GeometrischeAlgo
 
 		#region IGeometry implementation
 
-		public GraphicsPath GraphicsPath {
+		public new GraphicsPath GraphicsPath {
 			get {
 				var gp = new GraphicsPath ();
 				gp.AddLine ((float)A.X, (float)A.Y, (float)B.X, (float)B.Y);
-
 				return gp;
 			}
 		}
