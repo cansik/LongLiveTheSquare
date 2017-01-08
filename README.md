@@ -5,6 +5,7 @@ An algorithm to find the arbitrarily oriented minimum bounding box in `R²`.
 A [minimum bounding box][1] is a rectangle that encloses all points in a given set of points and has the smallest area of all enclosing rectangles (*Figure 1*).
 
 ![Minimal Bounding Box](images/bounding_box.png)
+
 *Figure 1: Minimal Bounding Box*
 
 ### How does it work?
@@ -17,6 +18,7 @@ The [convex hull][2] is a set of points which are the most outtest points of the
 LLTS uses the [monotone chain algorithm][3] to calculate the convex hull. This algorithm first sorts the points [lexicographically][4] and then runs through the upper and lower most points to create the upper and lower hull. Those two combined is the convex hull.
 
 ![Convex Hull](images/convex_hull.png)
+
 *Figure 2: Convex Hull*
 
 The monotone convex hull algorithm runs with `O(n * log(n))` speed.
@@ -64,6 +66,7 @@ The example application is written in C# with the ui framework [Eto.Forms][5] to
  * Gtk3
 
 ![Example Application](images/application.png)
+
 *Figure 3: Example Application*
 
 #### Functions
