@@ -61,8 +61,9 @@ namespace U4LongLiveTheSquare
 			}
 
 			//rotate axis algined box back
-			var minimalBoundingBox = new Polygon2d {
-				Points = minBox.Points.Select (p => RotateToXAxis (p, -minAngle)).ToList ()
+			var minimalBoundingBox = new Polygon2d
+			{
+				Points = minBox.Points.Select(p => RotateToXAxis(p, -minAngle)).ToList()
 			};
 
 			return minimalBoundingBox;
@@ -72,11 +73,11 @@ namespace U4LongLiveTheSquare
 		/// Calculates the angle to the X axis.
 		/// </summary>
 		/// <returns>The angle to the X axis.</returns>
-		/// <param name="s">The segnment to get the angle from.</param>
+		/// <param name="s">The segment to get the angle from.</param>
 		static double AngleToXAxis (Segment2d s)
 		{
 			var delta = s.A - s.B;
-			return Math.Atan (delta.Y / delta.X);
+			return -Math.Atan (delta.Y / delta.X);
 		}
 
 		/// <summary>
