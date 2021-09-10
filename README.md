@@ -28,7 +28,7 @@ The idea of the LLTS algorithm is to use the property that one edge of the minim
 
 So first of all the algorithm **connects** all points of the convex hull together to a list of segments.
 
-Because it is more trivial to find the axis aligned bounding box then the arbitrarily oriented we rotate all points to be parallel to the **x-axis** with our **segment**. This can be achived with a rotation matrix and a bit of trigonometry:
+Because it is more trivial to find the axis aligned bounding box then the arbitrarily oriented we rotate all points to be parallel to the **x-axis** with our **segment**. This can be achieved with a rotation matrix and a bit of trigonometry:
 
 ```cs
 // get angle of segment s
